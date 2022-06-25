@@ -1,3 +1,4 @@
+from re import sub
 import uuid, os, hashlib
 from flask import Flask, request, render_template, redirect, session, abort, flash
 app = Flask(__name__)
@@ -11,7 +12,6 @@ def restrict():
     restricted_pages = [
         'list_users',
         'view_user',
-        'edit_user',
         'delete_user'
     ]
     if 'logged_in' not in session and request.endpoint in restricted_pages:
@@ -43,7 +43,7 @@ def login():
             session['logged_in'] = True
             session['first_name'] = result['first_name']
             session['role'] = result['role']
-            session['id'] = result['id']
+            session['id'] = result['user_id']
             return redirect("/dashboard")
         else:
             flash("Invalid username or password.")
@@ -99,6 +99,38 @@ def list_users():
             cursor.execute("SELECT * FROM users")
             result = cursor.fetchall()
     return render_template('users_list.html', result=result)
+
+@app.route('/subject_information') # /subject_selections?user_id=123
+def subject_selections():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM subject_information WHERE user_id=%s", session['id'])
+            result = cursor.fetchone()
+    return render_template('subject_information.html', result=result)
+
+@app.route('/subject_selection', methods=['GET', 'POST'])
+def subject_selection():
+    if request.method == 'POST':
+
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM users WHERE email=%s"
+                values = (
+                    request.form['email'],
+                )
+                cursor.execute(sql, values)
+                result = cursor.fetchone()
+        if result:
+            session['subject_selection'] = True
+            session['first_name'] = result['first_name']
+            session['role'] = result['role']
+            session['id'] = result['user_id']
+            return redirect("/dashboard")
+        else:
+            flash("Invalid username or password.")
+            return redirect("/subject_selection")
+    else:
+        return render_template('subject_selections.html')
 
 @app.route('/view')
 def view_user():
