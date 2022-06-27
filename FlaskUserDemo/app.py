@@ -101,11 +101,11 @@ def list_users():
     return render_template('users_list.html', result=result)
 
 @app.route('/subject_information') # /subject_selections?user_id=123
-def subject_selections():
+def subject_information():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM subject_information WHERE user_id=%s", session['id'])
-            result = cursor.fetchone()
+            cursor.execute("SELECT * FROM subject_info")
+            result = cursor.fetchall()
     return render_template('subject_information.html', result=result)
 
 @app.route('/subject_selection', methods=['GET', 'POST'])
@@ -116,7 +116,11 @@ def subject_selection():
             with connection.cursor() as cursor:
                 sql = "SELECT * FROM users WHERE email=%s"
                 values = (
-                    request.form['email'],
+                    request.form['subject_name'],
+                    request.form['subject_code'],
+                    request.form['subject_categories'],
+                    request.form['subject_description'],
+                    request.form['head_faculty_teacher']
                 )
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
@@ -124,13 +128,13 @@ def subject_selection():
             session['subject_selection'] = True
             session['first_name'] = result['first_name']
             session['role'] = result['role']
-            session['id'] = result['user_id']
+            session['id'] = result['subject_id']
             return redirect("/dashboard")
         else:
-            flash("Invalid username or password.")
+            flash("Invalid subject.")
             return redirect("/subject_selection")
     else:
-        return render_template('subject_selections.html')
+        return render_template('subject_selection.html')
 
 @app.route('/view')
 def view_user():

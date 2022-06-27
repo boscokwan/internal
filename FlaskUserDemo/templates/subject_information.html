@@ -1,29 +1,23 @@
 {% extends '_layout.html' %}
 
-{% block title %}subject_selections{% endblock %}
+{% block title %}subject_information{% endblock %}
 
 {% block content %}
 <table>
     <tr>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>email</th>
-        <th>must_choose_subject(english)</th>
-        <th>must_choose_subject(Mathematics)</th>
-        <th>must_choose_subject(science)</th>
-        <th>self_choose_subject(1)</th>
-        <th>self_choose_subject(2)</th>
+        <th>subject_name</th>
+        <th>subject_code </th>
+        <th>subject_categories</th>
+        <th>subject_description</th>
+        <th>head_faculty_teachers</th>
     </tr>
     {% for row in result %}
     <tr>
-        <td>{{row.first_name}}</td>
-        <td>{{row.last_name }}</td>
-        <td>{{row.email}}</td>
-        <td>{{row['must_choose_subject(english)']}}</td>
-        <td>{{row['must_choose_subject(Mathematics)']}}</td>
-        <td>{{row['must_choose_subject(science)']}}</td>
-        <td>{{row['self_choose_subject(1)']}}</td>
-        <td>{{row['self_choose_sublect(2)']}}</td>
+        <td>{{row.subject_name}}</td>
+        <td>{{row.subject_code }}</td>
+        <td>{{row.subject_categories}}</td>
+        <td>{{row.subject_description}}</td>
+        <td>{{row.head_faculty_teachers}}<td>
         <td>
             <a href="/view?id={{row.id}}">View</a>
             <a href="/edit?id={{row.id}}">Edit</a>
