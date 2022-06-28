@@ -10,6 +10,7 @@ app.register_blueprint(setup)
 @app.before_request
 def restrict():
     restricted_pages = [
+        'edit_users'
         'list_users',
         'view_user',
         'delete_user'
@@ -114,13 +115,16 @@ def subject_selection():
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = "SELECT * FROM users WHERE email=%s"
+                sql = "insert* FROM users WHERE email=%s"
                 values = (
-                    request.form['subject_name'],
-                    request.form['subject_code'],
-                    request.form['subject_categories'],
-                    request.form['subject_description'],
-                    request.form['head_faculty_teacher']
+                    request.form['First_name'],
+                    request.form['Last_name'],
+                    request.form['email'],
+                    request.form['must_choose_subject(english)'],
+                    request.form['must_chooe_subject(Mathmetics)'],
+                    request.form['must_chooe_subject(Science)'],
+                    request.form['self_choose_subject(1)'],
+                    request.form['self_choose_subject(2)']
                 )
                 cursor.execute(sql, values)
                 result = cursor.fetchone()
@@ -148,7 +152,7 @@ def view_user():
 def delete_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM users WHERE id=%s", request.args['id'])
+            cursor.execute("DELETE FROM users WHERE id=%s", request.args['user_id'])
             connection.commit()
     return redirect('/dashboard')
 
@@ -177,20 +181,19 @@ def edit_user():
                 sql = """UPDATE users SET
                     first_name = %s,
                     last_name = %s,
-                    email = %s,
-                    avatar = %s
+                    email = %s
                 WHERE id = %s"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
                     request.form['email'],
-                    avatar_filename,
+]
                     request.form['id']
                 )
                 cursor.execute(sql, values)
                 connection.commit()
         return redirect('/view?id=' + request.form['id'])
-    else:
+      else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM users WHERE id = %s", request.args['id'])
