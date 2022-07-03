@@ -115,19 +115,21 @@ def subject_selection():
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = "insert* FROM users WHERE email=%s"
+                sql = """INSERT INTO table
+                    (first_name, last_name, email,must_choose_subject(english),must_choose_subject(Mathematics), must_choose_subject(science), self_choose_subject(1),self_choose_subject(2) )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""""
                 values = (
-                    request.form['First_name'],
-                    request.form['Last_name'],
+                    request.form['first_name'],
+                    request.form['last_name'],
                     request.form['email'],
                     request.form['must_choose_subject(english)'],
-                    request.form['must_chooe_subject(Mathmetics)'],
-                    request.form['must_chooe_subject(Science)'],
+                    request.form['must_choose_subject(Mathematics)'],
+                    request.form['must_choose_subject(science)'],
                     request.form['self_choose_subject(1)'],
                     request.form['self_choose_subject(2)']
                 )
                 cursor.execute(sql, values)
-                result = cursor.fetchone()
+                result = cursor.fetchall()
         if result:
             session['subject_selection'] = True
             session['first_name'] = result['first_name']
@@ -187,19 +189,17 @@ def edit_user():
                     request.form['first_name'],
                     request.form['last_name'],
                     request.form['email'],
-]
                     request.form['id']
                 )
                 cursor.execute(sql, values)
                 connection.commit()
         return redirect('/view?id=' + request.form['id'])
-      else:
+    else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM users WHERE id = %s", request.args['id'])
                 result = cursor.fetchone()
         return render_template('users_edit.html', result=result)
-
 
 if __name__ == '__main__':
     import os
@@ -213,3 +213,4 @@ if __name__ == '__main__':
     except ValueError:
         PORT = 5555
     app.run(HOST, PORT, debug=True)
+    aaaa
