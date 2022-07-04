@@ -138,7 +138,7 @@ def subject_selection():
 def view_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users WHERE id=%s", request.args['id'])
+            cursor.execute("SELECT * FROM users WHERE user_id=%s", request.args['user_id'])
             result = cursor.fetchone()
     return render_template('users_view.html', result=result)
 
@@ -146,16 +146,16 @@ def view_user():
 def delete_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM users WHERE id=%s", request.args['user_id'])
+            cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
             connection.commit()
     return redirect('/dashboard')
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit_user():
     # Admin are allowed, users with the right id are allowed, everyone else sees 404.
-    if session['role'] != 'admin' and str(session['id']) != request.args['id']:
+    if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
         flash("You don't have permission to edit this user.")
-        return redirect('/view?id=' + request.args['id'])
+        return redirect('/view?user_id=' + request.args['user_id'])
 
     if request.method == 'POST':
         if request.files['avatar'].filename:
@@ -185,7 +185,7 @@ def edit_user():
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect('/view?id=' + request.form['id'])
+        return redirect('/view?user_id=' + request.form['user_id'])
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
