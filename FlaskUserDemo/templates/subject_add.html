@@ -1,0 +1,25 @@
+{% extends '_layout.html' %}
+
+{% block title %}add a new subject{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <label for="subject_name">subject_name:</label>
+    <input id="subject_name" name="subject_name" />
+    <br />
+    <label for="subject_code">subject code:</label>
+    <input id="subject_code" name="subject_code" />
+    <br />
+    <label for="subject_categories">subject categories:</label>
+    <input id="subject_categories" name="subject_categories"/>
+    <br />
+    <label for="subject_description">subject description:</label>
+    <input id="subject_description" name="subject_description" />
+    <br />
+    <label for="head_faculty_teachers">head faculty teachers:</label>
+    <input id="head_faculty_teachers" name="head_faculty_teachers"/>
+    <br />
+    <br>
+    <input type="submit" value="add a new subject">
+</form>
+{% endblock %}

@@ -19,12 +19,12 @@
         <td>{{row.subject_description}}</td>
         <td>{{row.head_faculty_teachers}}<td>
         <td>
-            <a href="/view?id={{row.id}}">View</a>
-            <a href="/edit?id={{row.id}}">Edit</a>
-            <a href="/delete?id={{row.id}}"onlclick="return confirm('Are you sure?')">Delete</a>
+            <a href="/view?id={{row.subject_id}}">View</a>
+            <a href="/edit?id={{row.subject_id}}">Edit</a>
+            <a href="/delete?id={{row.subject_id}}"onlclick="return confirm('Are you sure?')">Delete</a>
         </td>
     </tr>
     {% endfor %}
 </table>
-<a href="{{url_for('add_user')}}">Add a new subject </a>
+<a href="{{url_for('add_subject')}}">Add a new subject </a>
 {% endblock %}
