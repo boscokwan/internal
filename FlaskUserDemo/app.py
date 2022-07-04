@@ -115,9 +115,9 @@ def subject_selection():
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = """INSERT INTO table
-                    (first_name, last_name, email,must_choose_subject(english),must_choose_subject(Mathematics), must_choose_subject(science), self_choose_subject(1),self_choose_subject(2) )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""""
+                sql = """INSERT INTO subject_selection
+                    (student_first_name, student_last_name, email,`must_choose_subject(english)`,`must_choose_subject(Mathematics)`, `must_choose_subject(science)`, `self_choose_subject(1)`,`self_choose_subject(2)` )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
@@ -129,16 +129,8 @@ def subject_selection():
                     request.form['self_choose_subject(2)']
                 )
                 cursor.execute(sql, values)
-                result = cursor.fetchall()
-        if result:
-            session['subject_selection'] = True
-            session['first_name'] = result['first_name']
-            session['role'] = result['role']
-            session['id'] = result['subject_id']
-            return redirect("/dashboard")
-        else:
-            flash("Invalid subject.")
-            return redirect("/subject_selection")
+                connection.commit()
+                return redirect('/')
     else:
         return render_template('subject_selection.html')
 
@@ -213,4 +205,3 @@ if __name__ == '__main__':
     except ValueError:
         PORT = 5555
     app.run(HOST, PORT, debug=True)
-    aaaa
