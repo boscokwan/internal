@@ -100,9 +100,14 @@ def list_users():
         return redirect('/')
     with create_connection() as connection:
         with connection.cursor() as cursor:
+            #cursor.execute("SELECT * FROM users JOIN subject_selection ON users.user_id = subject_selection.user_id")
+            cursor.execute("SELECT * FROM subject_selection")
+            selection_result = cursor.fetchall()
+            cursor.execute("SELECT * FROM subject_info")
+            info_result = cursor.fetchall()
             cursor.execute("SELECT * FROM users")
-            result = cursor.fetchall()
-    return render_template('users_list.html', result=result)
+            users_result = cursor.fetchall()
+    return render_template('users_list.html', users_result=users_result, selection_result=selection_result, info_result=info_result )
 
 @app.route('/subject_information') # /subject_selections?user_id=123
 def subject_information():
@@ -155,6 +160,66 @@ def delete_user():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit_user():
+    # Admin are allowed, users with the right id are allowed, everyone else sees 404.
+    if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
+        flash("You don't have permission to edit this user.")
+        return redirect('/view?user_id=' + request.args['user_id'])
+
+    if request.method == 'POST':
+        if request.files['avatar'].filename:
+            avatar_image = request.files["avatar"]
+            ext = os.path.splitext(avatar_image.filename)[1]
+            avatar_filename = str(uuid.uuid4())[:8] + ext
+            avatar_image.save("static/images/" + avatar_filename)
+            if request.form['old_avatar'] != 'None':
+                os.remove("static/images/" + request.form['old_avatar'])
+        elif request.form['old_avatar'] != 'None':
+            avatar_filename = request.form['old_avatar']
+        else:
+            avatar_filename = None
+
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """UPDATE users SET
+                    first_name = %s,
+                    last_name = %s,
+                    email = %s
+                WHERE id = %s"""
+                values = (
+                    request.form['first_name'],
+                    request.form['last_name'],
+                    request.form['email'],
+                    request.form['id']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+        return redirect('/view?user_id=' + request.form['user_id'])
+    else:
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM users WHERE id = %s", request.args['id'])
+                result = cursor.fetchone()
+        return render_template('users_edit.html', result=result)
+
+    #usbject delete, add and edit
+@app.route('/subject_view')
+def view_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE user_id=%s", request.args['user_id'])
+            result = cursor.fetchone()
+    return render_template('subject_view.html', result=result)
+
+@app.route('/subject_delete')
+def delete_subject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
+            connection.commit()
+    return redirect('/dashboard')
+
+@app.route('/subject_edit', methods=['GET', 'POST'])
+def edit_subject():
     # Admin are allowed, users with the right id are allowed, everyone else sees 404.
     if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
         flash("You don't have permission to edit this user.")
