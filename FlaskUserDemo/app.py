@@ -13,7 +13,10 @@ def restrict():
         'edit_users'
         'list_users',
         'view_user',
-        'delete_user'
+        'delete_user',
+        'edit_subject',
+        'list_subject',
+        'view_subject'
     ]
     if 'logged_in' not in session and request.endpoint in restricted_pages:
         flash("You must be logged in to view this page.")

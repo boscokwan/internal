@@ -1,0 +1,28 @@
+{% extends '_layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.first_name }}</td>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.}}</td>
+        <td>
+            <a href="/view?user_id={{ row.subject_id }}">View</a>
+            <a href="/edit?user_id={{ row.subject_id }}">Edit</a>
+            <a href="/delete?user_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('add_subject') }}">Add a new subject</a>
+{% endblock %}

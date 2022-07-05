@@ -1,0 +1,21 @@
+{% extends '_layout.html' %}
+
+{%block title %}view subject selections{% endblock %}
+
+{% block content %}
+
+<h1>{{ result.first_name }} {{ result.last_name }} {{`must_choose_subject(english)`}} {{`must_choose_subject(Mathematics)`}} {{`must_choose_subject(science)`}} {{`self_choose_subject(1)`}} {{`self_choose_subject(2)`}}</h1>
+
+<p><a href="mailto:{{ result.email }}">{{ result.email }}</a></p>
+
+<img src="{{ url_for('static', filename='images/' + (result.avatar or 'default.png')) }}" height="200">
+
+<p>
+    <a href="/edit?id={{ result.subject_id }}">Edit</a>
+    <a href="/delete?id={{ result.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+</p>
+<p>
+    <a href="{{ url_for('list_subject') }}">Back to dashboard</a>
+</p>
+
+{% endblock %}

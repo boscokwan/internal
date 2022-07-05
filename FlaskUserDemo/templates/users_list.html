@@ -24,4 +24,37 @@
     {% endfor %}
 </table>
 <a href="{{ url_for('add_user') }}">Add a new user</a>
+
+<table>
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>must_choose_subject(english)</th>
+        <th>must_choose_subject(Mathematics)</th>
+        <th>must_choose_subject(science)</th>
+        <th>self_choose_subject(1)</th>
+        <th>self_choose_subject(2)</th>
+        <th>Actions</th>
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.first_name }}</td>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.must_choose_subject(english)}}</td>
+        <td>{{ row.must_choose_subject(Mathematics)}}</td>
+        <td>{{ row.must_choose_subject(science)}}</td>
+        <td>{{ row.self_choose_subject(1)}}</td>
+        <td>{{ row.self_choose_subject(2)}}</td>
+        <td>
+            <a href="/view?user_id={{ row.user_id }}">View</a>
+            <a href="/edit?user_id={{ row.user_id }}">Edit</a>
+            <a href="/delete?user_id={{ row.user_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('add_user') }}">Add a new user</a>
 {% endblock %}
+
