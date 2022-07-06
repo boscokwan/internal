@@ -10,7 +10,7 @@ app.register_blueprint(setup)
 @app.before_request
 def restrict():
     restricted_pages = [
-        'edit_users'
+        'edit_users',
         'list_users',
         'view_user',
         'delete_user',
@@ -58,7 +58,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/')
+    return redirect('login_html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def add_user():
@@ -84,7 +84,7 @@ def add_user():
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
-                    request.form['email'],
+                    request.form['email'], 
                     encrypted_password,
                     avatar_filename
                 )
@@ -210,7 +210,7 @@ def edit_user():
 def view_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users WHERE user_id=%s", request.args['user_id'])
+            cursor.execute("SELECT * FROM users WHERE subject_id=%s", request.args['subject_id'])
             result = cursor.fetchone()
     return render_template('subject_view.html', result=result)
 
@@ -218,52 +218,43 @@ def view_subject():
 def delete_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
+            cursor.execute("DELETE FROM users WHERE subject_id=%s", request.args['subject_id'])
             connection.commit()
     return redirect('/dashboard')
 
 @app.route('/subject_edit', methods=['GET', 'POST'])
 def edit_subject():
     # Admin are allowed, users with the right id are allowed, everyone else sees 404.
-    if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
+    if session['role'] != 'admin' and str(session['subject_id']) != request.args['subject_id']:
         flash("You don't have permission to edit this user.")
-        return redirect('/view?user_id=' + request.args['user_id'])
-
-    if request.method == 'POST':
-        if request.files['avatar'].filename:
-            avatar_image = request.files["avatar"]
-            ext = os.path.splitext(avatar_image.filename)[1]
-            avatar_filename = str(uuid.uuid4())[:8] + ext
-            avatar_image.save("static/images/" + avatar_filename)
-            if request.form['old_avatar'] != 'None':
-                os.remove("static/images/" + request.form['old_avatar'])
-        elif request.form['old_avatar'] != 'None':
-            avatar_filename = request.form['old_avatar']
-        else:
-            avatar_filename = None
+        return redirect('/view?subject_id=' + request.args['subject_id'])
 
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = """UPDATE users SET
-                    first_name = %s,
-                    last_name = %s,
-                    email = %s
-                WHERE id = %s"""
+                sql = """UPDATE subject SET
+                    subject_name = %s,
+                    subeject_code = %s,
+                    subject_categories = %s,
+                    subject_descriptions = %s,
+                    head_faculty_teachers = %s,
+                WHERE subject_id = %s"""
                 values = (
-                    request.form['first_name'],
-                    request.form['last_name'],
-                    request.form['email'],
-                    request.form['id']
+                    request.form['subject_name'],
+                    request.form['subject_code'],
+                    request.form['subject_categories'],
+                    request.form['subject_description'],
+                    request.form['head_faculty_teachers'],
+                    request.form['subject_id']
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect('/view?user_id=' + request.form['user_id'])
+        return redirect('/view?subject_id=' + request.form['subject_id'])
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM users WHERE id = %s", request.args['id'])
+                cursor.execute("SELECT * FROM users WHERE subject_id = %s", request.args['subject_id'])
                 result = cursor.fetchone()
-        return render_template('users_edit.html', result=result)
+        return render_template('subject_edit.html', result=result)
 
 if __name__ == '__main__':
     import os

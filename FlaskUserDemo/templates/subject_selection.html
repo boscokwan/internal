@@ -48,9 +48,9 @@
     <br />
     <label for="self_choose_subject(2)">self_choose_subject(2):</label>
     <select id="self_choose_subject(2)" name="self_choose_subject(2)" />
-    {% for subject in subjects %}
-    <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
-    {% endfor %}
+        {% for subject in subjects %}
+        <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+        {% endfor %}
     <select />
 
     <br />

@@ -5,17 +5,20 @@
 {% block content %}
 <table>
     <tr>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Email</th>
+        <th>subject_name</th>
+        <th>subject_code</th>
+        <th>subject_categorties</th>
+        <th>subject_description</th>
+        <th>head_faculty_teachers</th>
         <th>Actions</th>
     </tr>
     {% for row in result %}
     <tr>
-        <td>{{ row.first_name }}</td>
-        <td>{{ row.last_name }}</td>
-        <td>{{ row.email }}</td>
-        <td>{{ row.}}</td>
+        <td>{{ row.subject_name }}</td>
+        <td>{{ row.subject_code }}</td>
+        <td>{{ row.subject_categorties }}</td>
+        <td>{{ row.subject_description}}</td>
+        <td>{{ row.head_faculty_teachers }}</td>
         <td>
             <a href="/view?user_id={{ row.subject_id }}">View</a>
             <a href="/edit?user_id={{ row.subject_id }}">Edit</a>

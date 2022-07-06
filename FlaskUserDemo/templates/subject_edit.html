@@ -1,11 +1,26 @@
-<!DOCTYPE html>
+{% extends '_layout.html' %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+{% block title %}Edit profile{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="subject_id" value="{{ result.subject_id }}">
+    <br />
+    <label for="_name">Subject Name:</label>
+    <input id="subject_name" name="subject_name" value="{{ result.subject_name }}">
+    <br>
+    <label for="subject_code">subject code:</label>
+    <input id="subject_code" name="subject_code" value="{{ result.subject_code }}">
+    <br>
+    <label for="subject_categories">Subjeect Categories:</label>
+    <input id="subject_categories" name="subject_categories" value="{{ result.subject_categories }}">
+    <br>
+    <label for="subject_description">Subject Description:</label>
+    <input id="subject_description" name="subject_description" value="{{ result.subject_description }}">
+    <br>
+    <label for="head_faculty_teacher">Head Faculty Teacher:</label>
+    <input id="head_faculty_teacher" name="head_faculty_teacher" value="{{ result.head_faculty_teacher }}">
+    <br>
+    <input type="submit" value="Save changes">
+</form>
+{% endblock %}
