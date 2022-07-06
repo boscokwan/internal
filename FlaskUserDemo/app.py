@@ -140,7 +140,11 @@ def subject_selection():
                 connection.commit()
                 return redirect('/')
     else:
-        return render_template('subject_selection.html')
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM subject_info")
+                subjects = cursor.fetchall()
+        return render_template('subject_selection.html', subjects=subjects)
 
 @app.route('/view')
 def view_user():

@@ -14,19 +14,45 @@
     <input id="email" name="email" type="email" />
     <br />
     <label for="must_choose_subject(english)">must_choose_subject(english)</label>
-    <input id="must_choose_subject(english)" name="must_choose_subject(english)" type="text" />
+    <select id="must_choose_subject(english)" name="must_choose_subject(english)" />
+        {% for subject in subjects %}
+         <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+    <select />
+
     <br />
+
     <label for="must_choose_subject(Mathematics)">must_choose_subject(Mathematics):</label>
-    <input id="must_choose_subject(Mathematics)" name="must_choose_subject(Mathematics)" type="text" />
+    <select id="must_choose_subject(Mathematics)" name="must_choose_subject(Mathematics)" />
+        {% for subject in subjects %}
+        <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+    <select />
     <br />
+
     <label for="must_choose_subject(science)">must_choose_subject(science):</label>
-    <input id="must_choose_subject(science)" name="must_choose_subject(science)" type="text" />
+    <select id="must_choose_subject(science)" name="must_choose_subject(science)" />
+         {% for subject in subjects %}
+         <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+    <select />
+
     <br />
     <label for="self_choose_subject(1)">self_choose_subject(1):</label>
-    <input id="self_choose_subject(1)" name="self_choose_subject(1)" type="text" />
+    <select id="self_choose_subject(1)" name="self_choose_subject(1)">
+        {% for subject in subjects %}
+        <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+    </select>
+
     <br />
     <label for="self_choose_subject(2)">self_choose_subject(2):</label>
-    <input id="self_choose_subject(2)" name="self_choose_subject(2)" type="text" />
+    <select id="self_choose_subject(2)" name="self_choose_subject(2)" />
+    {% for subject in subjects %}
+    <option value="{{ subject.subject_code }}">{{ subject.subject_name }}</option>
+    {% endfor %}
+    <select />
+
     <br />
     <br>
     <input type="submit" value="submmit">

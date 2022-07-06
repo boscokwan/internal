@@ -10,7 +10,7 @@
         <th>Email</th>
         <th>Actions</th>
     </tr>
-    {% for row in result %}
+    {% for row in users_result %}
     <tr>
         <td>{{ row.first_name }}</td>
         <td>{{ row.last_name }}</td>
@@ -37,7 +37,7 @@
         <th>self_choose_subject(2)</th>
         <th>Actions</th>
     </tr>
-    {% for row in result %}
+    {% for row in selection_result %}
     <tr>
         <td>{{ row.student_first_name }}</td>
         <td>{{ row.student_last_name }}</td>
@@ -67,7 +67,7 @@
         <th>head_faculty_teachers</th>
         <th>Actions</th>
     </tr>
-    {% for row in result %}
+    {% for row in info_result %}
     <tr>
         <td>{{ row.subject_name }}</td>
         <td>{{ row.subject_code }}</td>
