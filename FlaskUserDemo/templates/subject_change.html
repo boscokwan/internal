@@ -1,0 +1,36 @@
+{% extends '_layout.html' %}
+
+{% block title %}changing subject selections{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="user_id" value="{{ result.user_id }}">
+    <br />
+    <label for="first_name">first Name:</label>
+    <input id="first_name" name="first_name" value="{{ result.first_name }}">
+    <br>
+    <label for="last_name">Last name:</label>
+    <input id="last_name" name="last_name" value="{{ result.last_name }}">
+    <br>
+    <label for="email">email:</label>
+    <input id="email" name="email" value="{{ result.email }}">
+    <br>
+    <label for="must_choose_subject(english)">must choose subject(english):</label>
+    <input id="must_choose_subject(english)" name="must_choose_subject(english)" value="{{ result.must_choose_subject(english) }}">
+    <br>
+    <label for="must_choose_subject(Mathematics)">must choose subject(Mathematics):</label>
+    <input id="must_choose_subject(Mathematics)" name="must_choose_subject(Mathematics)" value="{{ result.must_choose_subject(Mathematics) }}">
+    <br>
+    <label for="must_choose_subject(science)">must choose subject(science):</label>
+    <input id="must_choose_subject(science)" name="must_choose_subject(science)" value="{{ result.must_choose_subject(science) }}">
+    <br>
+    <label for="self_choose_subject(1)">self_choose_subject(1):</label>
+    <input id="self_choose_subject(1)" name="self_choose_subject(1)" value="{{ result.self_choose_subject(1) }}">
+    <br>
+    <label for="self_choose_subject(2)">self choose subject(2):</label>
+    <input id="self_choose_subject(2)" name="self_choose_subject(2)" value="{{ result.self_choose_subject(2) }}">
+    <br>
+
+    <input type="submit" value="Save changes">
+</form>
+{% endblock %}

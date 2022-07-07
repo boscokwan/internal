@@ -107,7 +107,7 @@ def list_users():
             info_result = cursor.fetchall()
             cursor.execute("SELECT * FROM users")
             users_result = cursor.fetchall()
-    return render_template('users_list.html', users_result=users_result, selection_result=selection_result, info_result=info_result )
+            return render_template('users_list.html', users_result=users_result, selection_result=selection_result, info_result=info_result )
 
 @app.route('/subject_information') # /subject_selections?user_id=123
 def subject_information():
@@ -201,7 +201,7 @@ def edit_user():
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM users WHERE id = %s", request.args['id'])
+                cursor.execute("SELECT * FROM users WHERE user_id = %s", request.args['user_id'])
                 result = cursor.fetchone()
         return render_template('users_edit.html', result=result)
 
@@ -210,7 +210,7 @@ def edit_user():
 def view_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM users WHERE subject_id=%s", request.args['subject_id'])
+            cursor.execute("SELECT * FROM subject_info WHERE subject_id=%s", request.args['subject_id'])
             result = cursor.fetchone()
     return render_template('subject_view.html', result=result)
 
@@ -218,7 +218,7 @@ def view_subject():
 def delete_subject():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM users WHERE subject_id=%s", request.args['subject_id'])
+            cursor.execute("DELETE FROM subject_info WHERE subject_id=%s", request.args['subject_id'])
             connection.commit()
     return redirect('/dashboard')
 
@@ -252,9 +252,66 @@ def edit_subject():
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM users WHERE subject_id = %s", request.args['subject_id'])
+                cursor.execute("SELECT * FROM subject_info WHERE subject_id = %s", request.args['subject_id'])
                 result = cursor.fetchone()
         return render_template('subject_edit.html', result=result)
+
+@app.route('/subject_register', methods=['GET', 'POST'])
+def add_subject():
+    if request.method == 'POST':
+
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """INSERT INTO subject_info
+                    (subject_name, subject_code, subject_categories, subject_description, head_faculty_teachers )
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+                values = (
+                    request.form['subject_name'],
+                    request.form['subject_code'],
+                    request.form['subject_categories'], 
+                    request.form['subject_description'],
+                    request.form['head_faculty_teachers']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+        return redirect('/')
+    return render_template('subject_add.html')
+
+@app.route('/subject_chaange', methods=['GET', 'POST '])
+def change_subject():
+    if request.method == 'POST':
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """UPDATE subject SET
+                    first_name = %s,
+                    last_name = %s,
+                    email = %s,
+                    'must_choose_subject(Mathematics)' = %s,
+                    'must_choose_subject(english)' = %s,
+                    'must_choose_subject(science)' = %s,
+                    'self_choose_subject(1)' = %s,
+                    'self_choose_subject(2)' = %s,
+                WHERE user_id = %s"""
+                values = (
+                    request.form['fisrt_name'],
+                    request.form['last_name'],
+                    request.form['email'],
+                    request.form['must_choose_subject(english)'],
+                    request.form['must_choose_subject(Mathematics)'],
+                    request.form['must_choose_subject(science)'],
+                    request.form['self_choose_subject(1)'],
+                    request.form['self_choose_subject(2)']
+                    )
+                cursor.execute(sql, values)
+                connection.commit()
+        return redirect('/user_view?user_id=' + request.form['user_id'])
+    else:
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM subject_selection WHERE user_id = %s", request.args['user_id'])
+                result = cursor.fetchone()
+        return render_template('subject_change.html', result=result)
 
 if __name__ == '__main__':
     import os

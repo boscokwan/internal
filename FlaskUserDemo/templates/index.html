@@ -10,4 +10,33 @@
 <a href="{{ url_for('subject_selection') }}">Subject selections</a>
 <embed />
 <a href="{{ url_for('subject_information')}}">Subject informations</a>
-{% endblock %}
+<br />
+
+<table>
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>must_choose_subject(english)</th>
+        <th>must_choose_subject(Mathematics)</th>
+        <th>must_choose_subject(science)</th>
+        <th>self_choose_subject(1)</th>
+        <th>self_choose_subject(2)</th>
+    </tr>
+    {% for row in selection_result %}
+    <tr>
+        <td>{{ row.student_first_name }}</td>
+        <td>{{ row.student_last_name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row['must_choose_subject(english)']}}</td>
+        <td>{{ row['must_choose_subject(Mathematics)']}}</td>
+        <td>{{ row['must_choose_subject(science)']}}</td>
+        <td>{{ row['self_choose_subject(1)']}}</td>
+        <td>{{ row['self_choose_subject(2)']}}</td>
+        <td>changes </td>
+        <td>
+            <a href="/subject_view?subject_id={{ row.subject_id }}"> change subject </a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% endblock %}

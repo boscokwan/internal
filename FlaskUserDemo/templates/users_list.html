@@ -35,7 +35,6 @@
         <th>must_choose_subject(science)</th>
         <th>self_choose_subject(1)</th>
         <th>self_choose_subject(2)</th>
-        <th>Actions</th>
     </tr>
     {% for row in selection_result %}
     <tr>
@@ -48,9 +47,6 @@
         <td>{{ row['self_choose_subject(1)']}}</td>
         <td>{{ row['self_choose_subject(2)']}}</td>
         <td>
-            <a href="/view?user_id={{ row.user_id }}">View</a>
-            <a href="/edit?user_id={{ row.user_id }}">Edit</a>
-            <a href="/delete?user_id={{ row.user_id }}" onclick="return confirm('Are you sure?')">Delete</a>
         </td>
     </tr>
     {% endfor %}
@@ -67,7 +63,7 @@
         <th>head_faculty_teachers</th>
         <th>Actions</th>
     </tr>
-    {% for row in info_ result %}
+    {% for row in info_result %}
     <tr>
         <td>{{ row.subject_name }}</td>
         <td>{{ row.subject_code }}</td>
@@ -75,13 +71,13 @@
         <td>{{ row.subject_description }}</td>
         <td>{{ row.head_faculty_teachers}}</td>
         <td>
-            <a href="/view?user_id={{ row.subject_id }}">View</a>
-            <a href="/edit?user_id={{ row.subject_id }}">Edit</a>
-            <a href="/delete?user_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+            <a href="/subject_view?subject_id={{ row.subject_id }}">View</a>
+            <a href="/subject_edit?subject_id={{ row.subject_id }}">Edit</a>
+            <a href="/subject_delete?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
         </td>
     </tr>
     {% endfor %}
 </table>
-<a href="{{ url_for('add_user') }}">Add a new subject </a>
+<a href="{{ url_for('add_subject') }}">Add a new subject </a>
 
 {% endblock %}
