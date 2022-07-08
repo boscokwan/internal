@@ -22,6 +22,7 @@
         <th>must_choose_subject(science)</th>
         <th>self_choose_subject(1)</th>
         <th>self_choose_subject(2)</th>
+        <th>change_subject</th>
     </tr>
     {% for row in selection_result %}
     <tr>
@@ -33,9 +34,8 @@
         <td>{{ row['must_choose_subject(science)']}}</td>
         <td>{{ row['self_choose_subject(1)']}}</td>
         <td>{{ row['self_choose_subject(2)']}}</td>
-        <td>changes </td>
         <td>
-            <a href="/subject_view?subject_id={{ row.subject_id }}"> change subject </a>
+            <a href="/subject_change?user_id={{ row.user_id }}"> change subject </a>
         </td>
     </tr>
     {% endfor %}

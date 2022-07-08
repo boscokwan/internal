@@ -24,7 +24,32 @@ def restrict():
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    if request.method == 'POST':
+
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """INSERT INTO subject_selection
+                    (student_first_name, student_last_name, email,`must_choose_subject(english)`,`must_choose_subject(Mathematics)`, `must_choose_subject(science)`, `self_choose_subject(1)`,`self_choose_subject(2)` )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+                values = (
+                    request.form['first_name'],
+                    request.form['last_name'],
+                    request.form['email'],
+                    request.form['must_choose_subject(english)'],
+                    request.form['must_choose_subject(Mathematics)'],
+                    request.form['must_choose_subject(science)'],
+                    request.form['self_choose_subject(1)'],
+                    request.form['self_choose_subject(2)']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+                return redirect('/')
+    else:
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM subject_selection")
+                selection_result = cursor.fetchall()
+    return render_template("index.html", selection_result=selection_result)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -278,30 +303,31 @@ def add_subject():
         return redirect('/')
     return render_template('subject_add.html')
 
-@app.route('/subject_chaange', methods=['GET', 'POST '])
+@app.route('/subject_change', methods=['GET', 'POST'])
 def change_subject():
     if request.method == 'POST':
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = """UPDATE subject SET
+                sql = """UPDATE subject_selection SET
                     first_name = %s,
                     last_name = %s,
                     email = %s,
-                    'must_choose_subject(Mathematics)' = %s,
-                    'must_choose_subject(english)' = %s,
-                    'must_choose_subject(science)' = %s,
-                    'self_choose_subject(1)' = %s,
-                    'self_choose_subject(2)' = %s,
+                    `must_choose_subject(Mathematics)` = %s,
+                    `must_choose_subject(english)` = %s,
+                    `must_choose_subject(science)` = %s,
+                    `self_choose_subject(1)` = %s,
+                    `self_choose_subject(2)` = %s
                 WHERE user_id = %s"""
                 values = (
-                    request.form['fisrt_name'],
-                    request.form['last_name'],
+                    request.form['student_first_name'],
+                    request.form['student_last_name'],
                     request.form['email'],
                     request.form['must_choose_subject(english)'],
                     request.form['must_choose_subject(Mathematics)'],
                     request.form['must_choose_subject(science)'],
                     request.form['self_choose_subject(1)'],
-                    request.form['self_choose_subject(2)']
+                    request.form['self_choose_subject(2)'],
+                    request.args['user_id']
                     )
                 cursor.execute(sql, values)
                 connection.commit()
@@ -311,7 +337,9 @@ def change_subject():
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM subject_selection WHERE user_id = %s", request.args['user_id'])
                 result = cursor.fetchone()
-        return render_template('subject_change.html', result=result)
+                cursor.execute("SELECT * FROM subject_info")
+                subjects = cursor.fetchall()
+        return render_template('subject_change.html', result=result, subjects=subjects)
 
 if __name__ == '__main__':
     import os
