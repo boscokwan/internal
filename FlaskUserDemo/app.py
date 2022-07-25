@@ -32,8 +32,8 @@ def home():
                     (student_first_name, student_last_name, email,`must_choose_subject(english)`,`must_choose_subject(Mathematics)`, `must_choose_subject(science)`, `self_choose_subject(1)`,`self_choose_subject(2)` )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (
-                    request.form['first_name'],
-                    request.form['last_name'],
+                    request.form['student_first_name'],
+                    request.form['student_last_name'],
                     request.form['email'],
                     request.form['must_choose_subject(english)'],
                     request.form['must_choose_subject(Mathematics)'],
@@ -309,8 +309,8 @@ def change_subject():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """UPDATE subject_selection SET
-                    first_name = %s,
-                    last_name = %s,
+                    student_first_name = %s,
+                    student_last_name = %s,
                     email = %s,
                     `must_choose_subject(Mathematics)` = %s,
                     `must_choose_subject(english)` = %s,
@@ -336,7 +336,7 @@ def change_subject():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM subject_selection WHERE user_id = %s", request.args['user_id'])
-                result = cursor.fetchone()
+                result = cursor.fetchall()
                 cursor.execute("SELECT * FROM subject_info")
                 subjects = cursor.fetchall()
         return render_template('subject_change.html', result=result, subjects=subjects)
