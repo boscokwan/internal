@@ -319,8 +319,8 @@ def change_subject():
                     `self_choose_subject(2)` = %s
                 WHERE user_id = %s"""
                 values = (
-                    request.form['student_first_name'],
-                    request.form['student_last_name'],
+                    request.form['first_name'],
+                    request.form['last_name'],
                     request.form['email'],
                     request.form['must_choose_subject(english)'],
                     request.form['must_choose_subject(Mathematics)'],
@@ -331,7 +331,7 @@ def change_subject():
                     )
                 cursor.execute(sql, values)
                 connection.commit()
-        return redirect('/user_view?user_id=' + request.form['user_id'])
+        return redirect('/')
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
